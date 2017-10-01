@@ -1,5 +1,8 @@
 import update from 'react-addons-update';
-import {LOAD_TASK, LOAD_TASK_SUCCESS, LOAD_TASKS, LOAD_TASKS_SUCCESS, TASK_DELETE_SUCCESS} from '../actions/tasks';
+import {
+    LOAD_TASK, LOAD_TASK_SUCCESS, LOAD_TASKS, LOAD_TASKS_MORE, LOAD_TASKS_SUCCESS, TASK_DELETE_SUCCESS,
+    TASKS_PAGINATE
+} from '../actions/tasks';
 
 const inititalStore = {
     isLoading: false,
@@ -7,6 +10,8 @@ const inititalStore = {
     isTaskLoading: false,
     taskList: [],
     tasks: {},
+    count: 0,
+    page: 2,
 };
 
 export default function tasks (store = inititalStore, action) {
@@ -51,6 +56,15 @@ export default function tasks (store = inititalStore, action) {
                     $set: true,
                 },
             });
+        case LOAD_TASKS_MORE:
+            return update(store, {
+                taskList: {
+                    $push: action.result.result,
+                },
+                page: {
+                    $set: store.page + 1,
+                }
+            });
         case LOAD_TASK:
             return update(store, {
                 isTaskLoading: {
@@ -64,6 +78,12 @@ export default function tasks (store = inititalStore, action) {
                 },
                 isTaskLoading: {
                     $set: true,
+                },
+            });
+        case TASKS_PAGINATE:
+            return update(store, {
+                count: {
+                    $set: action.result,
                 },
             });
         default:

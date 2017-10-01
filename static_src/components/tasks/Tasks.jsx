@@ -1,11 +1,8 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {taskFetchData} from '../../actions/tasks';
 import {connect} from 'react-redux';
 import Task from './Task';
-import TaskCreate from './TaskCreate';
 
 class TasksComponent extends React.Component {
     componentDidMount() {

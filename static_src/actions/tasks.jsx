@@ -3,6 +3,7 @@ import {zero} from './users';
 import {taskNormalize, tasksNormalize} from '../normalizers/tasks';
 export const LOAD_TASKS = 'LOAD_TASKS';
 export const LOAD_TASKS_SUCCESS = 'LOAD_TASKS_SUCCESS';
+export const LOAD_TASKS_MORE = 'LOAD_TASKS_MORE';
 export const LOAD_TASKS_ERROR = 'LOAD_TASKS_ERROR';
 export const LOAD_TASK = 'LOAD_TASK';
 export const LOAD_TASK_SUCCESS = 'LOAD_TASK_SUCCESS';
@@ -15,6 +16,12 @@ export function taskFetchData(url) {
     const types = [LOAD_TASKS, LOAD_TASKS_SUCCESS, LOAD_TASKS_ERROR, TASKS_PAGINATE];
     return FetchData(url, types, tasksNormalize, 'get', null);
 }
+
+export function taskMoreFetchData(url) {
+    const types = [LOAD_TASKS, LOAD_TASKS_MORE, LOAD_TASKS_ERROR, TASKS_PAGINATE];
+    return FetchData(url, types, tasksNormalize, 'get', null);
+}
+
 
 export function ownTaskFetchData(url) {
     const types = [LOAD_TASK, LOAD_TASK_SUCCESS, LOAD_TASK_ERROR];

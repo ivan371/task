@@ -1,5 +1,8 @@
 import update from 'react-addons-update';
-import {LOAD_NEW_PROJECT_SUCCESS, LOAD_PROJECT_SUCCESS, LOAD_PROJECTS, LOAD_PROJECTS_SUCCESS} from '../actions/project';
+import {
+    LOAD_NEW_PROJECT_SUCCESS, LOAD_PROJECT_SUCCESS, LOAD_PROJECTS, LOAD_PROJECTS_SUCCESS,
+    PROJECT_DELETE_ERROR, PROJECT_DELETE_SUCCESS
+} from '../actions/project';
 import { Map, List, fromJS } from 'immutable';
 
 const inititalIMStore = fromJS(Map({
@@ -28,7 +31,15 @@ export default function project (store = inititalStore, action) {
             }
         }
     }
+    let index = null;
     switch (action.type) {
+        case PROJECT_DELETE_SUCCESS:
+            index = store.projectList.indexOf(action.id);
+            return update(store, {
+                projectList: {
+                    $splice: [[index, 1]],
+                },
+            });
         case LOAD_PROJECTS:
             // return store.set('isLoading', true);
             return update(store, {

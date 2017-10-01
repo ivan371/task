@@ -12,6 +12,9 @@ export const LOAD_NEW_PROJECT = 'LOAD_NEW_PROJECT';
 export const LOAD_NEW_PROJECT_SUCCESS = 'LOAD_NEW_PROJECT_SUCCESS';
 export const LOAD_NEW_PROJECT_ERROR = 'LOAD_NEW_PROJECT_ERROR';
 export const PROJECTS_PAGINATE = 'PROJECTS_PAGINATE';
+export const PROJECT_DELETE_SUCCESS = 'PROJECT_DELETE_SUCCESS';
+export const PROJECT_DELETE_ERROR = 'PROJECT_DELETE_ERROR';
+
 
 export function projectsFetchData(url) {
     const types = [LOAD_PROJECTS, LOAD_PROJECTS_SUCCESS, LOAD_PROJECTS_ERROR, PROJECTS_PAGINATE];
@@ -26,4 +29,9 @@ export function projectCreate(url, name) {
 export function projectChange(url, name) {
     const types = [LOAD_NEW_PROJECT, LOAD_NEW_PROJECT_SUCCESS, LOAD_NEW_PROJECT_ERROR];
     return FetchData(url, types, projectNormalize, 'put', JSON.stringify({name}), 'simple');
+}
+
+export function projectDelete(url, id) {
+    const types = [PROJECT_DELETE_SUCCESS, PROJECT_DELETE_ERROR];
+    return FetchDelete(url, types, id);
 }
