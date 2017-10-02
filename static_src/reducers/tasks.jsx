@@ -63,7 +63,10 @@ export default function tasks (store = inititalStore, action) {
                 },
                 page: {
                     $set: store.page + 1,
-                }
+                },
+                isProjectLoading: {
+                    $set: true,
+                },
             });
         case LOAD_TASK:
             return update(store, {

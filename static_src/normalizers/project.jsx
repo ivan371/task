@@ -15,3 +15,11 @@ export function projectNormalize (projects) {
     });
     return normalize(projects, project);
 }
+
+export function projectMembersNormalize(projectMembers) {
+    const user = new schema.Entity('user');
+    const projectMember = new schema.Entity('projectMember', {
+        'user': user,
+    });
+    return normalize(projectMembers, [projectMember]);
+}

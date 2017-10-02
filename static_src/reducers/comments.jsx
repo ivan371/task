@@ -1,5 +1,8 @@
 import update from 'react-addons-update';
-import {LOAD_COMMENT, LOAD_COMMENT_SUCCESS, LOAD_COMMENTS, LOAD_COMMENTS_SUCCESS} from '../actions/comments';
+import {
+    COMMENT_DELETE_SUCCESS, LOAD_COMMENT, LOAD_COMMENT_SUCCESS, LOAD_COMMENTS,
+    LOAD_COMMENTS_SUCCESS
+} from '../actions/comments';
 
 const inititalStore = {
     isLoading: false,
@@ -40,6 +43,13 @@ export default function comments (store = inititalStore, action) {
             return update(store, {
                 commentList: {
                     $push: [action.result.result],
+                },
+            });
+        case COMMENT_DELETE_SUCCESS:
+            index = store.commentList.indexOf(action.id);
+            return update(store, {
+                commentList: {
+                    $splice: [[index, 1]],
                 },
             });
         default:

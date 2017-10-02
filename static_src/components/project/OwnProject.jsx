@@ -6,6 +6,7 @@ import Task from './../tasks/Task';
 import TaskCreate from './../tasks/TaskCreate';
 import ProjectPage from './ProjectPage';
 import {taskSort, taskUrl, count, page} from '../../constants';
+import ProjectMembers from './ProjectMembers';
 
 class OwnProjectComponent extends React.Component {
     componentDidMount() {
@@ -31,6 +32,7 @@ class OwnProjectComponent extends React.Component {
                 {!this.props.isLoading ? null : project}
             </div>
             <div className="flex-container">
+                { !this.props.isLoading ?  null : <ProjectMembers id={parseInt(this.props.match.params.id)}/> }
                 { !this.props.isLoading ?  null : <TaskCreate id={parseInt(this.props.match.params.id)}/> }
                 { !this.props.isLoading ? <div className="loading"/> :  taskList }
                 { this.props.isLoading && this.props.count > (count * (this.props.page - 1)) ? <div className="flex-block">

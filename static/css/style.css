@@ -47,6 +47,7 @@ button {
     border: 1px solid AliceBlue;
     padding: 5px;
     border-radius: 1px;
+    cursor: pointer;
 }
 .loading {
     position: relative;
@@ -110,10 +111,12 @@ button {
     margin-right: 100px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 .flex-block{
     padding: 10px;
     margin: 10px;
+    width: 200px;
     background-color: rgba(33, 37, 40, 0.8);
     color: white;
 }
@@ -175,5 +178,5 @@ button {
     top: 0;
     bottom: 0;
     z-index: 1000;
-    opacity: .8;
+    opacity: .9;
 }
