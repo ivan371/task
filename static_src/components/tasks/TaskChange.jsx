@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {taskChange} from '../../actions/tasks';
+import {openModal} from '../../actions/users';
 
 class ProjectChangeComponent extends React.Component {
     state = {
@@ -15,6 +16,9 @@ class ProjectChangeComponent extends React.Component {
     };
     onCreate = (e) => {
         this.props.taskChange('/api/tasks/' + this.props.id + '/', this.state.text, this.state.description, this.props.project_id);
+    };
+    onOpen = (e) => {
+        this.props.openModal(!this.props.isOpen);
     };
     render() {
         return <div>
@@ -47,12 +51,15 @@ const mapStoreToProps = (state, props) => ({
     text: state.tasks.tasks[props.id].text,
     description: state.tasks.tasks[props.id].description,
     project_id: state.tasks.tasks[props.id].project,
+    isOpen: state.users.isModalOpen,
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
             taskChange,
+            openModal,
+
         }, dispatch),
     };
 };

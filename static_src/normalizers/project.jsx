@@ -23,3 +23,10 @@ export function projectMembersNormalize(projectMembers) {
     });
     return normalize(projectMembers, [projectMember]);
 }
+export function projectMemberNormalize(projectMembers) {
+    const user = new schema.Entity('user');
+    const projectMember = new schema.Entity('projectMember', {
+        'user': user,
+    });
+    return normalize(projectMembers, projectMember);
+}

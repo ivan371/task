@@ -1,5 +1,5 @@
 import { FetchData, FetchDelete } from './load';
-import {userNormalize} from '../normalizers/users';
+import {userNormalize, usersNormalize} from '../normalizers/users';
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
@@ -9,6 +9,10 @@ export const REGISTRATION_ERROR = 'REGISTRATION_ERROR';
 export const LOAD_USER = 'LOAD_USER';
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
 export const LOAD_USER_ERROR = 'LOAD_USER_ERROR';
+export const LOAD_USERS = 'LOAD_USERS';
+export const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS';
+export const LOAD_USERS_ERROR = 'LOAD_USERS_ERROR';
+export const USERS_PAGINATE = 'USERS_PAGINATE';
 export const LOGOUT = 'LOGOUT';
 export const MODAL_OPEN = 'MODAL_OPEN';
 
@@ -42,4 +46,9 @@ export function registration(url, username, password, email, first_name, last_na
 export function current(url) {
     const types = [LOAD_USER, LOAD_USER_SUCCESS, LOAD_USER_ERROR];
     return FetchData(url, types, userNormalize, 'get', null, 'simple');
+}
+
+export function usersFetchData(url) {
+    const types = [LOAD_USERS, LOAD_USERS_SUCCESS, LOAD_USERS_ERROR, USERS_PAGINATE];
+    return FetchData(url, types, usersNormalize, 'get', null);
 }

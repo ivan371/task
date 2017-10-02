@@ -1,7 +1,8 @@
 import update from 'react-addons-update';
 import {
-    LOAD_USER, LOAD_USER_SUCCESS, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT, MODAL_OPEN, REGISTRATION,
-    REGISTRATION_ERROR
+    LOAD_USER, LOAD_USER_SUCCESS, LOAD_USERS, LOAD_USERS_SUCCESS, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT, MODAL_OPEN,
+    REGISTRATION,
+    REGISTRATION_ERROR, USERS_PAGINATE
 } from '../actions/users';
 import {fakeAuth} from '../components/Login';
 
@@ -9,9 +10,11 @@ const inititalStore = {
     isLogin: localStorage.hasOwnProperty("token"),
     isFalied: false,
     users: {},
+    userList: [],
     user: null,
     isLoading: false,
     isModalOpen: false,
+    count: 0,
 };
 
 export default function users (store = inititalStore, action) {
@@ -96,6 +99,27 @@ export default function users (store = inititalStore, action) {
                 },
                 user: {
                     $set: action.result.result,
+                }
+            });
+        case LOAD_USERS:
+            return update(store, {
+                isLoading: {
+                    $set: false,
+                },
+            });
+        case LOAD_USERS_SUCCESS:
+            return update(store, {
+                isLoading: {
+                    $set: true,
+                },
+                userList: {
+                    $push: action.result.result,
+                }
+            });
+        case USERS_PAGINATE:
+            return update(store, {
+                count: {
+                    $set: action.result,
                 }
             });
         default:

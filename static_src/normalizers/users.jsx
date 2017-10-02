@@ -4,3 +4,8 @@ export function userNormalize (users) {
     const user = new schema.Entity('user');
     return normalize(users, user);
 }
+
+export function usersNormalize (users) {
+    const user = new schema.Entity('user');
+    return normalize(users, [user]);
+}

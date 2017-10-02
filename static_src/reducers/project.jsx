@@ -1,9 +1,10 @@
 import update from 'react-addons-update';
 import {
-    LOAD_NEW_PROJECT_SUCCESS, LOAD_PROJECT_MEMBERS, LOAD_PROJECT_MEMBERS_SUCCESS, LOAD_PROJECT_SUCCESS, LOAD_PROJECTS,
+    LOAD_NEW_PROJECT_SUCCESS, LOAD_PROJECT_MEMBER_SUCCESS, LOAD_PROJECT_MEMBERS, LOAD_PROJECT_MEMBERS_SUCCESS,
+    LOAD_PROJECT_SUCCESS, LOAD_PROJECTS,
     LOAD_PROJECTS_MORE,
     LOAD_PROJECTS_SUCCESS,
-    PROJECT_DELETE_ERROR, PROJECT_DELETE_SUCCESS, PROJECTS_PAGINATE
+    PROJECT_DELETE_ERROR, PROJECT_DELETE_SUCCESS, PROJECT_MEMBERS_PAGINATE, PROJECTS_PAGINATE
 } from '../actions/project';
 import { Map, List, fromJS } from 'immutable';
 
@@ -22,6 +23,7 @@ const inititalStore = {
     members: {},
     membersList: {},
     isMembersLoading: false,
+    memberCount: 0,
 };
 
 export default function project (store = inititalStore, action) {
@@ -99,6 +101,15 @@ export default function project (store = inititalStore, action) {
                     $set: false,
                 }
             });
+        case LOAD_PROJECT_MEMBER_SUCCESS:
+            return update(store, {
+                membersList: {
+                    $push: [action.result.result],
+                },
+                memberCount: {
+                    $set: store.memberCount + 1,
+                }
+            });
         case LOAD_PROJECT_MEMBERS_SUCCESS:
             return update(store, {
                 isMembersLoading: {
@@ -107,6 +118,12 @@ export default function project (store = inititalStore, action) {
                 membersList: {
                     $set: action.result.result,
                 }
+            });
+        case PROJECT_MEMBERS_PAGINATE:
+            return update(store, {
+                memberCount: {
+                    $set: action.result,
+                },
             });
         default:
             return store;

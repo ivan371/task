@@ -19,14 +19,13 @@ class ProjectChangeComponent extends React.Component {
     };
     render() {
         return <div>
-            <h3>
                 <input
                     value={ this.state.name }
                     name="name"
                     onChange={ this.onChange }
                 />
+                <br/>
                 <button onClick={ this.onCreate}>Изменить</button>
-            </h3>
         </div>;
     }
 }

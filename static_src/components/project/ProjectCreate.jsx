@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {projectCreate} from '../../actions/project';
+import {projectCreate, projectMemberCreate} from '../../actions/project';
+import {projectUrl} from '../../constants';
 
 class ProjectCreateComponent extends React.Component {
 
@@ -14,8 +15,7 @@ class ProjectCreateComponent extends React.Component {
     };
 
     onCreate = (e) => {
-        this.props.projectCreate('/api/projects/', this.state.name);
-        this.setState({name: ''});
+        this.props.projectCreate(projectUrl, this.state.name);
     };
 
     render() {
