@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {openModal, usersFetchData} from '../../actions/users';
+import {openModal, usersFetchData, usersUnMount} from '../../actions/users';
 import {count, page, usersUrl} from '../../constants';
 import {projectMemberCreate} from '../../actions/project';
 
@@ -9,6 +9,11 @@ class MembersAddComponent extends React.Component {
     componentDidMount() {
         this.props.usersFetchData('/api/users/');
     }
+
+    componentWillUnmount() {
+        this.props.usersUnMount();
+    }
+
     componentWillUpdate(nextProps, nextState){
         if(this.props.count !== nextProps.count) {
             for(let i = 2; i <= nextProps.count / count + 1; i++) {
@@ -16,20 +21,25 @@ class MembersAddComponent extends React.Component {
             }
         }
     }
+
     onChangeUser = (e) => {
         this.setState({user: e.target.value});
     };
+
     onChangeRole = (e) => {
         this.setState({role: e.target.value});
     };
+
     onCreate = (e) => {
         this.props.projectMemberCreate('/api/projectMember/', this.props.id, this.state.user, this.state.role);
         this.props.openModal(!this.props.isOpen);
     };
+
     state = {
         user: 1,
         role: 1,
     };
+
     render() {
         let select = [];
         if(this.props.isLoading) {
@@ -74,6 +84,7 @@ const mapDispatchToProps = (dispatch) => {
             usersFetchData,
             projectMemberCreate,
             openModal,
+            usersUnMount,
         }, dispatch),
     };
 };

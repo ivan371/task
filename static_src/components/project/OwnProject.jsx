@@ -7,6 +7,9 @@ import TaskCreate from './../tasks/TaskCreate';
 import ProjectPage from './ProjectPage';
 import {taskSort, taskUrl, count, page} from '../../constants';
 import ProjectMembers from './ProjectMembers';
+import Modal from '../Modal';
+import MembersAdd from './MembersAdd';
+import ProjectChange from './ProjectChange';
 
 class OwnProjectComponent extends React.Component {
     componentDidMount() {
@@ -18,6 +21,7 @@ class OwnProjectComponent extends React.Component {
     render() {
         let taskList = [];
         let project = null;
+        let modal = null;
         if (this.props.isLoading) {
             taskList = this.props.taskList.map(
                 (taskId) => {
@@ -25,6 +29,14 @@ class OwnProjectComponent extends React.Component {
                 }
             );
             project = <ProjectPage id={parseInt(this.props.match.params.id)}/>;
+        }
+        switch (this.props.modal) {
+            case "members":
+                modal = <MembersAdd id={parseInt(this.props.match.params.id)}/>;
+                break;
+            case "change":
+                modal = <ProjectChange id={parseInt(this.props.match.params.id)}/>;
+                break;
         }
 
         return <div>
@@ -39,6 +51,9 @@ class OwnProjectComponent extends React.Component {
                     <button onClick={this.onLoadMore}>Показать еще</button>
                 </div> : null }
             </div>
+            <Modal>
+                {modal}
+            </Modal>
         </div>;
     }
 }
@@ -53,6 +68,7 @@ const mapStoreToProps = (state, props) => ({
     taskList: state.tasks.taskList,
     count: state.tasks.count,
     page: state.tasks.page,
+    modal: state.users.modalValue,
 });
 
 const mapDispatchToProps = (dispatch) => {

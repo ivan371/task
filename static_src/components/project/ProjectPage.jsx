@@ -11,7 +11,7 @@ class ProjectPageComponent extends React.Component {
         name: this.props.name,
     };
     onOpen = (e) => {
-        this.props.openModal(!this.props.isOpen);
+        this.props.openModal(!this.props.isOpen, "change");
     };
     render() {
         return <div className="title-block">
@@ -21,9 +21,6 @@ class ProjectPageComponent extends React.Component {
             </h3>
             <p>{this.props.created_at}</p>
             <div className="user-short">{this.props.first_name} {this.props.last_name}</div>
-            <Modal>
-                <ProjectChange id={this.props.id}/>
-            </Modal>
         </div>;
     }
 }

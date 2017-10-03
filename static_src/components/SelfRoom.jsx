@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {current} from '../actions/users';
+import {current, openModal} from '../actions/users';
 import Profile from './Profile';
+import Modal from './Modal';
+import ProfileChange from './ProfileChange';
 
 class SelfRoomComponent extends React.Component {
 
@@ -17,6 +19,9 @@ class SelfRoomComponent extends React.Component {
         }
         return <div>
             {!this.props.isLoading ? <div className="loading"/> : profile}
+            <Modal>
+                <ProfileChange/>
+            </Modal>
         </div>;
     }
 }
@@ -28,7 +33,7 @@ const mapStoreToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
-            current,
+            current
         }, dispatch),
     };
 };

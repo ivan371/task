@@ -2,7 +2,7 @@ import update from 'react-addons-update';
 import {
     LOAD_USER, LOAD_USER_SUCCESS, LOAD_USERS, LOAD_USERS_SUCCESS, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT, MODAL_OPEN,
     REGISTRATION,
-    REGISTRATION_ERROR, USERS_PAGINATE
+    REGISTRATION_ERROR, USERS_PAGINATE, USERS_UNMOUNT
 } from '../actions/users';
 import {fakeAuth} from '../components/Login';
 
@@ -14,6 +14,7 @@ const inititalStore = {
     user: null,
     isLoading: false,
     isModalOpen: false,
+    modalValue: null,
     count: 0,
 };
 
@@ -32,10 +33,17 @@ export default function users (store = inititalStore, action) {
     switch (action.type) {
 
         case MODAL_OPEN:
+            if(action.modal !== undefined) {
+                store = update(store, {
+                    modalValue: {
+                        $set: action.modal,
+                    },
+                });
+            }
             return update(store, {
                 isModalOpen: {
                     $set: action.isOpen,
-                }
+                },
             });
 
         case LOGIN_SUCCESS:
@@ -120,6 +128,12 @@ export default function users (store = inititalStore, action) {
             return update(store, {
                 count: {
                     $set: action.result,
+                }
+            });
+        case USERS_UNMOUNT:
+            return update(store, {
+                userList: {
+                    $set: [],
                 }
             });
         default:

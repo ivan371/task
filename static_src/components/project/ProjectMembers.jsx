@@ -14,7 +14,7 @@ class ProjectMembersComponent extends React.Component {
         this.props.projectMembersFetchData('/api/projectMember/?project=' + this.props.id);
     }
     onOpen = (e) => {
-        this.props.openModal(!this.props.isOpen);
+        this.props.openModal(!this.props.isOpen, "members");
     };
     render() {
         let membersList = [];
@@ -32,9 +32,6 @@ class ProjectMembersComponent extends React.Component {
             { this.props.membersList.length > 4
                 ? <p>И еще {this.props.memberCount - 4}<button className="add" onClick={this.onOpen}>Добавить</button></p>
                 : <button className="add" onClick={this.onOpen}>Добавить</button> }
-            <Modal>
-                <MembersAdd id={this.props.id}/>
-            </Modal>
         </div>;
     }
 }

@@ -10,6 +10,7 @@ export const LOAD_USER = 'LOAD_USER';
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
 export const LOAD_USER_ERROR = 'LOAD_USER_ERROR';
 export const LOAD_USERS = 'LOAD_USERS';
+export const USERS_UNMOUNT = 'USERS_UNMOUNT';
 export const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS';
 export const LOAD_USERS_ERROR = 'LOAD_USERS_ERROR';
 export const USERS_PAGINATE = 'USERS_PAGINATE';
@@ -20,10 +21,11 @@ export function zero(result) {
     return result;
 }
 
-export function openModal(isOpen) {
+export function openModal(isOpen, modal) {
     return {
         type: MODAL_OPEN,
         isOpen,
+        modal,
     };
 }
 
@@ -48,7 +50,31 @@ export function current(url) {
     return FetchData(url, types, userNormalize, 'get', null, 'simple');
 }
 
+export function userChange(url, username, first_name, last_name, email, avatar) {
+    const types = [LOAD_USER, LOAD_USER_SUCCESS, LOAD_USER_ERROR];
+    let data = new FormData();
+    data.append('avatar', avatar, 'avatar.jpg');
+    // data.append('username', username);
+    // data.append('first_name', first_name);
+    // data.append('last_name', last_name);
+    // data.append('email', email);
+    // console.log(data);
+    return FetchData(url, types, userNormalize, 'put', JSON.stringify({username, first_name, last_name, email, avatar: data}), 'multi');
+}
+
 export function usersFetchData(url) {
     const types = [LOAD_USERS, LOAD_USERS_SUCCESS, LOAD_USERS_ERROR, USERS_PAGINATE];
     return FetchData(url, types, usersNormalize, 'get', null);
+}
+
+export function usersUnMount() {
+    return {
+        type: USERS_UNMOUNT,
+    }
+}
+
+function fileCoding(file) {
+    console.log(File.read(file));
+    let base64_image = new Buffer(File.read(file)).toString('base64');;
+    return "data:image/jpg;base64," + base64_image;
 }

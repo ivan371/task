@@ -106,7 +106,7 @@ export function FetchData(url, types, normilizer, method, data, model, id) {
             .then((response) => response.json())
             .then((data) =>
             {
-                if (model === 'simple') {
+                if (model === 'simple' || model === 'multi') {
                     dispatch(loadSuccess(data, normilizer, types[1], id))
                 }
                 else {
