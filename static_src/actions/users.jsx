@@ -53,13 +53,15 @@ export function current(url) {
 export function userChange(url, username, first_name, last_name, email, avatar) {
     const types = [LOAD_USER, LOAD_USER_SUCCESS, LOAD_USER_ERROR];
     let data = new FormData();
-    data.append('avatar', avatar, 'avatar.jpg');
-    // data.append('username', username);
-    // data.append('first_name', first_name);
-    // data.append('last_name', last_name);
-    // data.append('email', email);
-    // console.log(data);
-    return FetchData(url, types, userNormalize, 'put', JSON.stringify({username, first_name, last_name, email, avatar: data}), 'multi');
+    // console.log(JSON.parse(data.serializeArray()));
+    data.append('username', username);
+    data.append('email', email);
+    data.append('first_name', first_name);
+    data.append('last_name', last_name);
+    if(avatar !== null) {
+        data.append('avatar', avatar);
+    }
+    return FetchData(url, types, userNormalize, 'put', data, 'multi');
 }
 
 export function usersFetchData(url) {

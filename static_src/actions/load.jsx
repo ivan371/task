@@ -77,18 +77,27 @@ export function FetchData(url, types, normilizer, method, data, model, id) {
     if (localStorage.hasOwnProperty("token")) {
         token = "Token " + localStorage["token"];
     }
-    let headers = {
-        "Authorization": token,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    };
+    let headers = null;
+    if(model === 'multi') {
+        headers = {
+            "Authorization": token,
+            'Accept': 'html/text; q=1.0, */*',
+        }
+    }
+    else{
+        headers = {
+            "Authorization": token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    }
     let body = null;
     if (method === 'post' || method === 'put' || method === 'patch') {
         console.log(data);
         body = data;
     }
     // console.log(types);
-    // console.log(model);
+    console.log(headers);
     return (dispatch) => {
         fetch(url, {
             credentials: "include",
