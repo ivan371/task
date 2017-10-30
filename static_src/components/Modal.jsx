@@ -2,8 +2,14 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {openModal} from '../actions/users';
+import PropTypes from 'prop-types';
 
-class ModalComponent extends React.Component {
+export class ModalComponent extends React.Component {
+
+    static propTypes = {
+        isOpen: PropTypes.bool,
+        openModal: PropTypes.func.isRequired,
+    };
 
     onClose = () => {
         this.props.openModal(!this.props.isOpen);
@@ -24,6 +30,9 @@ class ModalComponent extends React.Component {
     }
 }
 
+ModalComponent.propTypes = {
+};
+
 
 const mapStoreToProps = (state, props) => ({
     isOpen: state.users.isModalOpen,
@@ -36,6 +45,7 @@ const mapDispatchToProps = (dispatch) => {
         }, dispatch),
     };
 };
+
 
 export default connect(
     mapStoreToProps,

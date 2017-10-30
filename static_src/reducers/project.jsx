@@ -27,23 +27,25 @@ const inititalStore = {
 };
 
 export default function project (store = inititalStore, action) {
-    if (action.hasOwnProperty('result')) {
-        if (action.result.hasOwnProperty('entities')) {
-            if (action.result.entities.hasOwnProperty('project')) {
-                // store = store.updateIn(['projects'], project => project.merge(action.result.entities.project));
-                // store.projects = store.projects.merge(store.projects, action.result.entities.project);
-                store = update(store, {
-                    projects: {
-                        $merge: action.result.entities.project,
-                    },
-                });
-            }
-            if (action.result.entities.hasOwnProperty('projectMember')) {
-                store = update(store, {
-                    members: {
-                        $merge: action.result.entities.projectMember,
-                    },
-                });
+    if (action.hasOwnProperty('payload')) {
+        if(action.payload !== undefined) {
+            if (action.payload.hasOwnProperty('entities')) {
+                if (action.payload.entities.hasOwnProperty('project')) {
+                    // store = store.updateIn(['projects'], project => project.merge(action.result.entities.project));
+                    // store.projects = store.projects.merge(store.projects, action.result.entities.project);
+                    store = update(store, {
+                        projects: {
+                            $merge: action.payload.entities.project,
+                        },
+                    });
+                }
+                if (action.payload.entities.hasOwnProperty('projectMember')) {
+                    store = update(store, {
+                        members: {
+                            $merge: action.payload.entities.projectMember,
+                        },
+                    });
+                }
             }
         }
     }
@@ -76,20 +78,23 @@ export default function project (store = inititalStore, action) {
                     $set: true
                 },
                 projectList: {
-                    $set: action.result.result,
+                    $set: action.payload.result,
+                },
+                count: {
+                    $set: action.payload.count,
                 }
             });
         case LOAD_PROJECT_SUCCESS:
             // return store.push('projectList', [action.result.result]);
             return update(store, {
                 projectList: {
-                    $push: [action.result.result],
-                }
+                    $unshift: [action.payload.result],
+                },
             });
         case LOAD_PROJECTS_MORE:
             return update(store, {
                 projectList: {
-                    $push: action.result.result,
+                    $push: action.payload.result,
                 },
                 page: {
                     $set: store.page + 1,
@@ -104,7 +109,7 @@ export default function project (store = inititalStore, action) {
         case LOAD_PROJECT_MEMBER_SUCCESS:
             return update(store, {
                 membersList: {
-                    $push: [action.result.result],
+                    $push: [action.payload.result],
                 },
                 memberCount: {
                     $set: store.memberCount + 1,
@@ -116,8 +121,11 @@ export default function project (store = inititalStore, action) {
                     $set: true,
                 },
                 membersList: {
-                    $set: action.result.result,
-                }
+                    $set: action.payload.result,
+                },
+                memberCount: {
+                    $set: action.payload.count,
+                },
             });
         case PROJECT_MEMBERS_PAGINATE:
             return update(store, {

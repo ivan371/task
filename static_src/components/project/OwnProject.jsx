@@ -5,15 +5,30 @@ import {projectFetchDate, taskMoreFetchData} from '../../actions/tasks';
 import Task from './../tasks/Task';
 import TaskCreate from './../tasks/TaskCreate';
 import ProjectPage from './ProjectPage';
-import {taskSort, taskUrl, count, page} from '../../constants';
+import {taskSort, taskUrl, count, page, absoluteUrl, projectMemberUrl} from '../../constants';
 import ProjectMembers from './ProjectMembers';
 import Modal from '../Modal';
 import MembersAdd from './MembersAdd';
 import ProjectChange from './ProjectChange';
+import {projectMembersFetchData} from '../../actions/project';
 
 class OwnProjectComponent extends React.Component {
+    static defaultProps = {
+        addToPromises: () => {}
+    };
+    constructor(props){
+        super(props);
+        if( SERVER ){
+            this.props.addToPromises(this.props.projectFetchDate(taskUrl + taskSort + this.props.match.params.id));
+            this.props.addToPromises(this.props.projectMembersFetchData(projectMemberUrl + this.props.match.params.id));
+        }
+    }
+
     componentDidMount() {
-        this.props.projectFetchDate(taskUrl + taskSort + this.props.match.params.id);
+        if (!this.props.isServerRendering) {
+            this.props.projectFetchDate(taskUrl + taskSort + this.props.match.params.id);
+            this.props.addToPromises(this.props.projectMembersFetchData(projectMemberUrl + this.props.match.params.id));
+        }
     }
     onLoadMore = (e) => {
         this.props.taskMoreFetchData(taskUrl + taskSort + this.props.match.params.id + '&' + page + this.props.page);
@@ -44,7 +59,9 @@ class OwnProjectComponent extends React.Component {
                 {!this.props.isLoading ? null : project}
             </div>
             <div className="flex-container">
-                { !this.props.isLoading ?  null : <ProjectMembers id={parseInt(this.props.match.params.id)}/> }
+                { !this.props.isLoading ?  null : <ProjectMembers
+                    id={parseInt(this.props.match.params.id)}
+                /> }
                 { !this.props.isLoading ?  null : <TaskCreate id={parseInt(this.props.match.params.id)}/> }
                 { !this.props.isLoading ? <div className="loading"/> :  taskList }
                 { this.props.isLoading && this.props.count > (count * (this.props.page - 1)) ? <div className="flex-block">
@@ -60,6 +77,7 @@ class OwnProjectComponent extends React.Component {
 
 
 OwnProjectComponent.propTypes = {
+    addToPromises: React.PropTypes.func,
 };
 
 const mapStoreToProps = (state, props) => ({
@@ -69,6 +87,7 @@ const mapStoreToProps = (state, props) => ({
     count: state.tasks.count,
     page: state.tasks.page,
     modal: state.users.modalValue,
+    isServerRendering: state.SSR.serverRendering,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -76,6 +95,7 @@ const mapDispatchToProps = (dispatch) => {
         ...bindActionCreators({
             projectFetchDate,
             taskMoreFetchData,
+            projectMembersFetchData,
         }, dispatch),
     };
 };

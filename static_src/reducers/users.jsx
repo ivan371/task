@@ -5,9 +5,11 @@ import {
     REGISTRATION_ERROR, USERS_PAGINATE, USERS_UNMOUNT
 } from '../actions/users';
 import {fakeAuth} from '../components/Login';
+import {LOAD_TASKS_ERROR} from '../actions/tasks';
+import {SET_SSR_FLAG} from '../actions/serverFlag';
 
 const inititalStore = {
-    isLogin: localStorage.hasOwnProperty("token"),
+    isLogin: true,
     isFalied: false,
     users: {},
     userList: [],
@@ -19,19 +21,29 @@ const inititalStore = {
 };
 
 export default function users (store = inititalStore, action) {
-    if (action.hasOwnProperty('result')) {
-        if (action.result.hasOwnProperty('entities')) {
-            if (action.result.entities.hasOwnProperty('user')) {
-                store = update(store, {
-                    users: {
-                        $merge: action.result.entities.user,
-                    },
-                });
+    if (action.hasOwnProperty('payload')) {
+        if(action.payload !== undefined) {
+            if (action.payload.hasOwnProperty('entities')) {
+                if (action.payload.entities.hasOwnProperty('user')) {
+                    store = update(store, {
+                        users: {
+                            $merge: action.payload.entities.user,
+                        },
+                    });
+                }
+            }
+            if (action.payload.hasOwnProperty('status')) {
+                if (action.payload.status === 401) {
+                    store = update(store, {
+                        isLogin: {
+                            $set: false,
+                        }
+                    });
+                }
             }
         }
     }
     switch (action.type) {
-
         case MODAL_OPEN:
             if(action.modal !== undefined) {
                 store = update(store, {
@@ -47,9 +59,9 @@ export default function users (store = inititalStore, action) {
             });
 
         case LOGIN_SUCCESS:
-            if(action.result.token !== undefined) {
-                localStorage.setItem("token", action.result.token);
-                fakeAuth.authenticate();
+            // if(action.result.token !== undefined) {
+            //     localStorage.setItem("token", action.result.token);
+            //     fakeAuth.authenticate();
                 return update(store, {
                     isLogin: {
                         $set: true
@@ -57,20 +69,20 @@ export default function users (store = inititalStore, action) {
                     isFalied: {
                         $set: false,
                     }
-                })
-            }
-            else {
-                localStorage.removeItem("token");
-                fakeAuth.signout();
-                return update(store, {
-                    isLogin: {
-                        $set: false
-                    },
-                })
-            }
+                });
+            // }
+            // else {
+            //     localStorage.removeItem("token");
+            //     fakeAuth.signout();
+            //     return update(store, {
+            //         isLogin: {
+            //             $set: false
+            //         },
+            //     })
+            // }
         case LOGIN_ERROR:
-            fakeAuth.signout();
-            localStorage.removeItem("token");
+            // fakeAuth.signout();
+            // localStorage.removeItem("token");
             return update(store, {
                 isLogin: {
                     $set: false,
@@ -80,15 +92,12 @@ export default function users (store = inititalStore, action) {
                 }
             });
         case REGISTRATION_ERROR:
-            fakeAuth.signout();
-            localStorage.removeItem("token");
             return update(store, {
                 isFalied: {
                     $set: true,
                 }
             });
         case LOGOUT:
-            localStorage.removeItem("token");
             return update(store, {
                 isLogin: {
                     $set: false,
@@ -106,7 +115,7 @@ export default function users (store = inititalStore, action) {
                     $set: true
                 },
                 user: {
-                    $set: action.result.result,
+                    $set: action.payload.result,
                 }
             });
         case LOAD_USERS:
@@ -121,7 +130,7 @@ export default function users (store = inititalStore, action) {
                     $set: true,
                 },
                 userList: {
-                    $push: action.result.result,
+                    $push: action.payload.result,
                 }
             });
         case USERS_PAGINATE:

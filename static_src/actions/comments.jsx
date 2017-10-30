@@ -1,5 +1,5 @@
 import {commentNormalize, commentsNormalize} from '../normalizers/comments';
-import {FetchData, FetchDelete} from './load';
+import {apiLoad, FetchData, FetchDelete} from './load';
 
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
 export const LOAD_COMMENTS_ERROR = 'LOAD_COMMENTS_ERROR';
@@ -13,12 +13,12 @@ export const COMMENT_DELETE_ERROR = 'COMMENT_DELETE_ERROR';
 
 export function commentsFetchData(url) {
     const types = [LOAD_COMMENTS, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_ERROR, COMMENTS_PAGINATE];
-    return FetchData(url, types, commentsNormalize, 'get', null);
+    return apiLoad(url, 'GET', types, null, commentsNormalize, false);
 }
 
 export function commentCreate(url, text, task) {
     const types = [LOAD_COMMENT, LOAD_COMMENT_SUCCESS, LOAD_COMMENT_ERROR];
-    return FetchData(url, types, commentNormalize, 'post', JSON.stringify({text, task}), 'simple');
+    return apiLoad(url, 'POST', types, JSON.stringify({text, task}), commentNormalize, true);
 }
 
 export function commentDelete(url, id) {

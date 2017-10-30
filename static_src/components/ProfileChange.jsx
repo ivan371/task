@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {userChange} from '../actions/users';
 import {usersUrl} from '../constants';
-import FileBase64 from 'react-file-base64';
 
 class ProfileChangeComponent extends React.Component {
     state = {

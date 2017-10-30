@@ -6,15 +6,33 @@ import {projectsFetchData, projectsMoreFetchData} from '../../actions/project';
 import Project from './Project';
 import ProjectCreate from './ProjectCreate';
 import { toJS } from './../../to-js'
-import {count, page, projectUrl} from '../../constants';
+import {count, page, projectUrl, absoluteUrl} from '../../constants';
 
 
 class ProjectsComponent extends React.Component {
-    componentDidMount() {
-        this.props.projectsFetchData(projectUrl);
+    static defaultProps = {
+        addToPromises: () => {}
+    };
+    constructor(props){
+        super(props);
+        if( SERVER ){
+            console.log('ADDTO_PROMISE');
+            this.props.addToPromises(this.props.projectsFetchData(projectUrl));
+        }
     }
+
+    componentDidMount() {
+        if (!this.props.isServerRendering) {
+            this.props.projectsFetchData(projectUrl);
+        }
+    }
+
+    static staticRender(store){
+        store.dispatch(projectsFetchData(projectUrl))
+    }
+
     onLoadMore = (e) => {
-        this.props.projectsMoreFetchData(projectUrl + '?' + page + this.props.page);
+        this.props.projectsMoreFetchData(projectUrl + '&&' + page + this.props.page);
     };
     render() {
         let projectList = [];
@@ -37,12 +55,18 @@ class ProjectsComponent extends React.Component {
         </div>;
     }
 }
+
+ProjectsComponent.propTypes = {
+    addToPromises: React.PropTypes.func,
+};
+
 const mapStoreToProps = (state, props) => ({
     isLoading: state.project.isLoading,
     projects: state.project.projects,
     projectList: state.project.projectList,
     count: state.project.count,
     page: state.project.page,
+    isServerRendering: state.SSR.serverRendering,
 });
 
 const mapDispatchToProps = (dispatch) => {

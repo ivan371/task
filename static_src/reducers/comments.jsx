@@ -11,14 +11,16 @@ const inititalStore = {
 };
 
 export default function comments (store = inititalStore, action) {
-    if (action.hasOwnProperty('result')) {
-        if (action.result.hasOwnProperty('entities')) {
-            if (action.result.entities.hasOwnProperty('comment')) {
-                store = update(store, {
-                    comments: {
-                        $merge: action.result.entities.comment,
-                    },
-                });
+    if (action.hasOwnProperty('payload')) {
+        if(action.payload !== undefined) {
+            if (action.payload.hasOwnProperty('entities')) {
+                if (action.payload.entities.hasOwnProperty('comment')) {
+                    store = update(store, {
+                        comments: {
+                            $merge: action.payload.entities.comment,
+                        },
+                    });
+                }
             }
         }
     }
@@ -36,13 +38,13 @@ export default function comments (store = inititalStore, action) {
                     $set: true,
                 },
                 commentList: {
-                    $set: action.result.result,
+                    $set: action.payload.result,
                 }
             });
         case LOAD_COMMENT_SUCCESS:
             return update(store, {
                 commentList: {
-                    $push: [action.result.result],
+                    $push: [action.payload.result],
                 },
             });
         case COMMENT_DELETE_SUCCESS:

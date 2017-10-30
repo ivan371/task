@@ -1,6 +1,6 @@
 import { normalize, schema } from 'normalizr';
 
-export function tasksNormalize (tasks) {
+export function tasksNormalize (tasks, count) {
     const user = new schema.Entity('user');
     const project = new schema.Entity('project', {
         'author': user,
@@ -10,7 +10,9 @@ export function tasksNormalize (tasks) {
         'assign_to': user,
         'project': project,
     });
-    return normalize(tasks, [task]);
+    let result = normalize(tasks, [task]);
+    result.count = count;
+    return result;
 }
 
 export function taskNormalize (tasks) {

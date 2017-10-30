@@ -8,11 +8,9 @@ import Member from './Member';
 import {openModal} from '../../actions/users';
 import MembersAdd from './MembersAdd';
 import Modal from '../Modal';
+import {projectMemberUrl} from '../../constants';
 
 class ProjectMembersComponent extends React.Component {
-    componentDidMount() {
-        this.props.projectMembersFetchData('/api/projectMember/?project=' + this.props.id);
-    }
     onOpen = (e) => {
         this.props.openModal(!this.props.isOpen, "members");
     };
@@ -51,7 +49,6 @@ const mapStoreToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
-            projectMembersFetchData,
             openModal,
         }, dispatch),
     };

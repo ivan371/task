@@ -4,11 +4,13 @@ import users from './users';
 import tasks from './tasks';
 import project from './project';
 import comments from './comments';
+import SSR from './SSR';
 
 export default combineReducers({
-    routing: routerReducer,
+    routerReducer,
     users,
     tasks,
     project,
     comments,
+    SSR,
 });

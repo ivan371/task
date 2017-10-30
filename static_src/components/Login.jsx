@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {login, logout} from '../actions/users';
 
 export const fakeAuth = {
-    isAuthenticated: localStorage.hasOwnProperty("token"),
+    // isAuthenticated: localStorage.hasOwnProperty("token"),
     authenticate(cb) {
         this.isAuthenticated = true;
         setTimeout(cb, 100) // fake async
@@ -18,7 +18,7 @@ export const fakeAuth = {
 
 export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        fakeAuth.isAuthenticated ? (
+        this.props.isLogin ? (
             <Component {...props}/>
         ) : (
             <Redirect to={{
@@ -44,12 +44,12 @@ class LoginComponent extends React.Component {
     };
 
     render() {
-        const { from } = this.props.location.state || { from: { pathname: '/' } };
-       if (this.props.isLogin) {
-            return (
-                <Redirect to={from}/>
-            )
-        }
+        // const { from } = this.props.location.state || { from: { pathname: '/' } };
+        // if (this.props.isLogin) {
+        //     return (
+        //         <Redirect to={from}/>
+        //     )
+        // }
 
         return (
             <div className="login">
@@ -82,3 +82,73 @@ export default connect(
     mapStoreToProps,
     mapDispatchToProps
 )(LoginComponent);
+
+// class LoginComponent extends React.Component {
+//     state = {
+//         username: '',
+//         password: '',
+//     }
+//
+//     submitForm(e) {
+//         e.preventDefault()
+//         const data = new FormData();
+//         data.append('username', this.state.username);
+//         data.append('password', this.state.password);
+//         fetch('/api/token-auth/', {method: 'POST', body: data}).then((data) => {
+//             console.log(data);
+//             if (data.status >= 200 && data.status < 300){
+//                 return data.json()
+//             } else {
+//                 return Promise.resolve({error: true})
+//             }
+//         }).then((json) => {
+//             if (json.error && json.status === 'ok'){
+//                 console.log('auth-success')
+//             }
+//         })
+//
+//     }
+//
+//     render() {
+//         if (this.props.isLoading) {
+//             return <div className="b-task-list">Загрузка...</div>;
+//         }
+//
+//         return (
+//             <div className="b-task-list">
+//                 <form onSubmit={ (e) => this.submitForm(e) }>
+//                     <div>
+//                         <label
+//                             htmlFor="username"
+//                         >
+//                             username
+//                         </label>
+//                         <input
+//                             name="username"
+//                             id='username'
+//                             value={ this.state.username }
+//                             onChange={ (e) => { this.setState({ [e.target.name]: e.target.value}) } }
+//                         />
+//                     </div>
+//                     <div>
+//                         <label
+//                             htmlFor="password"
+//                         >
+//                             password
+//                         </label>
+//                         <input
+//                             id="password"
+//                             name="password"
+//                             type="password"
+//                             value={ this.state.password }
+//                             onChange={ (e) => { this.setState({ [e.target.name]: e.target.value}) } }
+//                         />
+//                     </div>
+//                     <button>сохранить</button>
+//                 </form>
+//             </div>
+//         );
+//     }
+// }
+//
+// export default LoginComponent;

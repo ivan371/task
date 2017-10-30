@@ -15,14 +15,17 @@ const inititalStore = {
 };
 
 export default function tasks (store = inititalStore, action) {
-    if (action.hasOwnProperty('result')) {
-        if (action.result.hasOwnProperty('entities')) {
-            if (action.result.entities.hasOwnProperty('task')) {
-                store = update(store, {
-                    tasks: {
-                        $merge: action.result.entities.task,
-                    },
-                });
+    console.log("REDUSER", action);
+    if (action.hasOwnProperty('payload')) {
+        if(action.payload !== undefined) {
+            if (action.payload.hasOwnProperty('entities')) {
+                if (action.payload.entities.hasOwnProperty('task')) {
+                    store = update(store, {
+                        tasks: {
+                            $merge: action.payload.entities.task,
+                        },
+                    });
+                }
             }
         }
     }
@@ -50,16 +53,19 @@ export default function tasks (store = inititalStore, action) {
                     $set: true
                 },
                 taskList: {
-                    $set: action.result.result,
+                    $set: action.payload.result,
                 },
                 isProjectLoading: {
                     $set: true,
                 },
+                count: {
+                    $set: action.payload.count,
+                }
             });
         case LOAD_TASKS_MORE:
             return update(store, {
                 taskList: {
-                    $push: action.result.result,
+                    $push: action.payload.result,
                 },
                 page: {
                     $set: store.page + 1,
@@ -77,7 +83,7 @@ export default function tasks (store = inititalStore, action) {
         case LOAD_TASK_SUCCESS:
             return update(store, {
                 taskList: {
-                    $push: [action.result.result],
+                    $unshift: [action.payload.result],
                 },
                 isTaskLoading: {
                     $set: true,
@@ -86,7 +92,7 @@ export default function tasks (store = inititalStore, action) {
         case TASKS_PAGINATE:
             return update(store, {
                 count: {
-                    $set: action.result,
+                    $set: action.payload,
                 },
             });
         default:

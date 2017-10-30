@@ -1,4 +1,5 @@
 import cookie from 'react-cookies';
+import {CALL_API, getJSON} from 'redux-api-middleware';
 
 function loadres(bool, type) {
     return {
@@ -132,5 +133,34 @@ export function FetchData(url, types, normilizer, method, data, model, id) {
             .catch(() => dispatch(loadError(types[2], id)))
             .catch(console.log);
 
+    };
+}
+
+export function apiLoad(url, method, types, body, normalizer, isSimple) {
+    return {
+        [CALL_API]: {
+            credentials: 'same-origin',
+            endpoint: url,
+            headers: { 'Content-Type': 'application/json' },
+            method: method,
+            body: body,
+            types: [
+                types[0],
+                {
+                    type: types[1],
+                    payload: (action, state, res) => {
+                        return getJSON(res).then(
+                            (json) => {
+                                if(isSimple)
+                                    return normalizer(json);
+                                else
+                                    return normalizer(json.results, json.count)
+                            },
+                        );
+                    },
+                },
+                types[2],
+            ],
+        },
     };
 }
